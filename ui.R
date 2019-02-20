@@ -11,7 +11,7 @@ ui <-fluidPage(
                                     selected = c("any")),
                         selectInput("country", 
                                     "Country:",
-                                    choices = c("any",sort(unique(geo_tags$country))),
+                                    choices = c("any",sort(unique(tb_sdg2$country))),
                                     selected = c("any")),
                         sliderInput("timeline", 
                                     "Timeline:", 
