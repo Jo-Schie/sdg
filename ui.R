@@ -7,7 +7,7 @@ ui <-fluidPage(
                       sidebarPanel(
                         selectInput("target", 
                                     "Target:",
-                                    choices = c("any",sort(unique(sort(tb_sdg2$target)))),
+                                    choices = c("any",levels(tb_sdg2$target)),
                                     selected = c("any")),
                         selectInput("country", 
                                     "Country:",

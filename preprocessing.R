@@ -41,3 +41,14 @@ sort(unique(tb_sdg2$country))
 tb_sdg2$Start[tb_sdg2$Start=="before 1990"]<-"1990"
 tb_sdg2$Start<-as.numeric(as.character(tb_sdg2$Start))
 # what to do with undefined in this column?
+
+
+#create levels to order targets
+sdg_f <- tibble(sdgs = unique(tb_sdg2$target),
+                sdg_i = (str_extract(sdgs, "^[0-9]+")),
+                sdg_j = str_extract(sdgs, "\\.(.+)\\:")) %>%
+  arrange(as.numeric(sdg_i), sdg_j)
+
+tb_sdg2 <- tb_sdg2 %>%
+  mutate(target = factor(target, levels = c(sdg_f$sdgs)))
+levels(tb_sdg2$target)
