@@ -7,11 +7,11 @@ ui <-fluidPage(
                       sidebarPanel(
                         selectInput("target", 
                                     "Target:",
-                                    choices = c("any",sort(unique(sort(tb_sdg2$target)))),
+                                    choices = c("any",levels(tb_sdg2$target)),
                                     selected = c("any")),
                         selectInput("country", 
                                     "Country:",
-                                    choices = c("any",sort(unique(geo_tags$country))),
+                                    choices = c("any",sort(unique(tb_sdg2$country))),
                                     selected = c("any")),
                         sliderInput("timeline", 
                                     "Timeline:", 
@@ -31,11 +31,11 @@ ui <-fluidPage(
                                    h4('Number of Sets by Year', align = "center")
                           ) # end of "Visualize the Data" tab panel
                         ))
-                      ),
+             ),
              # about panel
              tabPanel("About",
                       h4('Number of Sets by Year', align = "center")
-
+                      
              )
-             ) 
+  ) 
 )
