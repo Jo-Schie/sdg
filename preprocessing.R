@@ -1,6 +1,6 @@
 # Preparing reference for convertion of region into countries
 source("countries.R")
-
+source("goal_target_separated.R")
 # Download the data from the online-sheet and load
 drive_download(as_id("1CXGo4Zh8i7R4aLlCmdqKbNr9qH5xeH9Lq2h3-UMqWh4"),type = "csv",overwrite = TRUE)
 tb_sdg<-read.csv("Test for IndicatorDB (Antworten).csv", stringsAsFactors = FALSE)
@@ -13,7 +13,7 @@ tb_sdg <- tb_sdg %>%
   unite("target", starts_with("Which.target"), sep = "")
 
 # Fill-in countries if global
-n_max_country <- max(str_count(tb_sdg$Which.countries.are.covered..1, ","))+1
+n_max_country <- nrow(geo_tags)
 
 country_vars <- paste0("country_", 1:n_max_country)
 to_keep <- colnames(tb_sdg)
@@ -37,10 +37,15 @@ sort(unique(tb_sdg2$country))
 
 
 
-# convert start-date
+### convert start-date
 tb_sdg2$Start[tb_sdg2$Start=="before 1990"]<-"1990"
 tb_sdg2$Start<-as.numeric(as.character(tb_sdg2$Start))
-# what to do with undefined in this column?
+
+#create columns with no NA values for Start and End date. They will be used for the filter, whereas the table renders the NA`s
+tb_sdg2 <- tb_sdg2 %>%
+  mutate(Start_mod = ifelse(is.na(Start), 1990, Start),
+         End_mod = ifelse(is.na(End), 10000, End))
+
 
 
 #create levels to order targets
@@ -49,6 +54,41 @@ sdg_f <- tibble(sdgs = unique(tb_sdg2$target),
                 sdg_j = str_extract(sdgs, "\\.(.+)\\:")) %>%
   arrange(as.numeric(sdg_i), sdg_j)
 
+
+
+
 tb_sdg2 <- tb_sdg2 %>%
   mutate(target = factor(target, levels = c(sdg_f$sdgs)))
-levels(tb_sdg2$target)
+
+
+# join target_tb (with separated goal and target) with sdg2
+sdg_f <- sdg_f %>%
+  mutate(sdg_j2 = str_remove(sdg_j, ":"),
+         index = paste0(sdg_i, sdg_j2)) %>%
+  left_join(target_tb, by = "index")
+
+
+
+tb_sdg2 <- tb_sdg2 %>%
+  left_join(sdg_f, by = c("target" = "sdgs")) %>%
+  rename(target_long = target) %>%
+  rename(Country = country) %>%
+  rename(goal_not_ordinal = goal) %>%
+  mutate(Target = paste(index, `target.y`)) %>%
+  mutate(Goal = paste0(sdg_i, ": ", goal_not_ordinal))
+
+#create levels to order targets
+sdg_f2 <- tibble(sdgs = unique(tb_sdg2$Target),
+                sdg_i = (str_extract(sdgs, "^[0-9]+")),
+                sdg_j = str_remove(str_extract(unique(tb_sdg2$Target), "\\.(..?) "), " ")) %>%
+  arrange(as.numeric(sdg_i), sdg_j)
+
+
+
+
+tb_sdg2 <- tb_sdg2 %>%
+  mutate(Target = factor(Target, levels = c(sdg_f2$sdgs)))
+
+
+levels(tb_sdg2$Target)
+

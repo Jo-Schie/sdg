@@ -7,11 +7,11 @@ ui <-fluidPage(
                       sidebarPanel(
                         selectInput("target", 
                                     "Target:",
-                                    choices = c("any",levels(tb_sdg2$target)),
+                                    choices = c("any",levels(tb_sdg2$Target)),
                                     selected = c("any")),
                         selectInput("country", 
                                     "Country:",
-                                    choices = c("any",sort(unique(tb_sdg2$country))),
+                                    choices = c("any",sort(unique(tb_sdg2$Country))),
                                     selected = c("any")),
                         sliderInput("timeline", 
                                     "Timeline:", 
