@@ -78,17 +78,26 @@ tb_sdg2 <- tb_sdg2 %>%
   mutate(Goal = paste0(sdg_i, ": ", goal_not_ordinal))
 
 #create levels to order targets
-sdg_f2 <- tibble(sdgs = unique(tb_sdg2$Target),
-                sdg_i = (str_extract(sdgs, "^[0-9]+")),
-                sdg_j = str_remove(str_extract(unique(tb_sdg2$Target), "\\.(..?) "), " ")) %>%
+sdg_factor_target <- tibble(sdgs = unique(tb_sdg2$Target),
+                            sdg_i = (str_extract(sdgs, "^[0-9]+")),
+                            sdg_j = str_remove(str_extract(unique(tb_sdg2$Target), "\\.(..?) "), " ")) %>%
   arrange(as.numeric(sdg_i), sdg_j)
 
 
 
 
 tb_sdg2 <- tb_sdg2 %>%
-  mutate(Target = factor(Target, levels = c(sdg_f2$sdgs)))
+  mutate(Target = factor(Target, levels = c(sdg_factor_target$sdgs)))
+
+#create levels to order goals
+sdg_factor_goal <- tibble(sdg = unique(tb_sdg2$Goal),
+                          sdg_i = (str_extract(sdg, "^[0-9]+"))) %>%
+  arrange(as.numeric(sdg_i))
+
+tb_sdg2 <- tb_sdg2 %>%
+  mutate(Goal = factor(Goal, levels = c(sdg_factor_goal$sdg)))
 
 
-levels(tb_sdg2$Target)
+
+
 

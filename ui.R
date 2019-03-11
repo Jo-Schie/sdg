@@ -5,10 +5,14 @@ ui <-fluidPage(
              # Panel of database
              tabPanel("Explore the Data",
                       sidebarPanel(
+                        selectInput("goal",
+                                    "Goal",
+                                    choices = c("any", levels(tb_sdg2$Goal)),
+                                    selected = c("any")
+                        ),
                         selectInput("target", 
                                     "Target:",
-                                    choices = c("any",levels(tb_sdg2$Target)),
-                                    selected = c("any")),
+                                    choices = NULL,
                         selectInput("country", 
                                     "Country:",
                                     choices = c("any",sort(unique(tb_sdg2$Country))),
