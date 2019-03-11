@@ -12,6 +12,6 @@ server<-function(session, input,output){
     updateSelectInput(session, "target", "Target", choices = c("any",unique(x)))
   })
   
-  output$dTable<-renderDataTable({mytable()})
+  output$dTable<-renderDataTable({mytable()}, escape = FALSE )
   
 }

@@ -97,6 +97,10 @@ sdg_factor_goal <- tibble(sdg = unique(tb_sdg2$Goal),
 tb_sdg2 <- tb_sdg2 %>%
   mutate(Goal = factor(Goal, levels = c(sdg_factor_goal$sdg)))
 
+# transform links to proper html links
+
+tb_sdg2$Access <- paste0("<a href='",tb_sdg2$Access,"'>",tb_sdg2$Access,"</a>")
+
 
 
 
