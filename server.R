@@ -12,6 +12,23 @@ server<-function(session, input,output){
     updateSelectInput(session, "target", "Target", choices = c("any",unique(x)))
   })
   
-  output$dTable<-renderDataTable({mytable()}, escape = FALSE )
+mylongtable <- reactive({f_filter_long(min_year = input$timeline[1],
+                                  max_year = input$timeline[2],
+                                  input$country,
+                                  input$target,
+                                  input$goal)})
   
+  output$dTable<-DT::renderDataTable({mytable()}, escape = FALSE, selection = "single", server = TRUE)
+  
+
+  #show selected rows in other table
+  tb_sdg2_selected <- reactive({
+    ids <- input$dTable_rows_selected
+    t(mylongtable()[ids,])
+  })
+  
+  output$longtable <- DT::renderDataTable({tb_sdg2_selected()}, escape = FALSE, server = TRUE,
+                                          options = list(pageLength = 25), selection = "none")
+  
+
 }

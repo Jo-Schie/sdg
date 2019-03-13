@@ -56,12 +56,11 @@ sdg_f <- tibble(sdgs = unique(tb_sdg2$target),
 
 
 
-
 tb_sdg2 <- tb_sdg2 %>%
   mutate(target = factor(target, levels = c(sdg_f$sdgs)))
 
 
-# join target_tb (with separated goal and target) with sdg2
+# join target_tb (with separated goal and target) with sdg2 and rename some column names for better readibility
 sdg_f <- sdg_f %>%
   mutate(sdg_j2 = str_remove(sdg_j, ":"),
          index = paste0(sdg_i, sdg_j2)) %>%
@@ -71,9 +70,12 @@ sdg_f <- sdg_f %>%
 
 tb_sdg2 <- tb_sdg2 %>%
   left_join(sdg_f, by = c("target" = "sdgs")) %>%
-  rename(target_long = target) %>%
+  rename(`Target long` = target) %>%
   rename(Country = country) %>%
   rename(goal_not_ordinal = goal) %>%
+  rename(`Data origin` = `Data.generation`) %>% rename(`Spatial resolution` = `What.is.the.HIGHEST.spatial.resolution.of.this.data.`) %>%
+  rename(Update = `How.often.the.data.are.updated`) %>%
+  rename(`Account needed?` = `Is.an.account.needed.`) %>%
   mutate(Target = paste(index, `target.y`)) %>%
   mutate(Goal = paste0(sdg_i, ": ", goal_not_ordinal))
 
@@ -82,9 +84,6 @@ sdg_factor_target <- tibble(sdgs = unique(tb_sdg2$Target),
                             sdg_i = (str_extract(sdgs, "^[0-9]+")),
                             sdg_j = str_remove(str_extract(unique(tb_sdg2$Target), "\\.(..?) "), " ")) %>%
   arrange(as.numeric(sdg_i), sdg_j)
-
-
-
 
 tb_sdg2 <- tb_sdg2 %>%
   mutate(Target = factor(Target, levels = c(sdg_factor_target$sdgs)))
@@ -101,7 +100,11 @@ tb_sdg2 <- tb_sdg2 %>%
 
 tb_sdg2$Access <- paste0("<a href='",tb_sdg2$Access,"'>",tb_sdg2$Access,"</a>")
 
+#concatenate spatial resolution with adm level when spatial res = irregular
+tb_sdg2$`Spatial resolution` = ifelse(tb_sdg2$`Spatial resolution` == "irregular (e.g. administrative areas)",
+                               tb_sdg2$`In.which.administrative.level.the.data.are.available.`,
+                               tb_sdg2$`Spatial resolution`)
+  
 
-
-
-
+#concatenate updates(yes/no) with update frequency when updates =yes
+tb_sdg2$Updates = ifelse(tb_sdg2$Updates == "Yes", tb_sdg2$Update, tb_sdg2$Updates)

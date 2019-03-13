@@ -12,7 +12,7 @@ ui <-fluidPage(
                         ),
                         selectInput("target", 
                                     "Target:",
-                                    choices = NULL,
+                                    choices = NULL),
                         selectInput("country", 
                                     "Country:",
                                     choices = c("any",sort(unique(tb_sdg2$Country))),
@@ -27,12 +27,13 @@ ui <-fluidPage(
                       mainPanel(
                         tabsetPanel(
                           # Data 
-                          tabPanel(p(icon("table"), "shortform"),
-                                   h4('Datesets', align = "center"),
+                          tabPanel(p(icon("table"), "List of Indicators"),
+                                   h4('Datasets', align = "center"),
                                    dataTableOutput(outputId = "dTable")
                           ), # end of "Dataset" tab panel
-                          tabPanel(p(icon("table"), "longform"),
-                                   h4('Number of Sets by Year', align = "center")
+                          tabPanel(p(icon("table"), "Selected Target"),
+                                   h4('Details', align = "center"),
+                                   dataTableOutput("longtable")
                           ) # end of "Visualize the Data" tab panel
                         ))
              ),

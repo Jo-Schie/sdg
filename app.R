@@ -3,6 +3,7 @@ library("tidyverse")
 library("googledrive")
 library("shiny")
 library("shinythemes")
+library("DT")
 
 # download and preprocess the data
 source("preprocessing.R")
