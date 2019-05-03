@@ -12,6 +12,9 @@ tb_sdg[is.na(tb_sdg)] <- ""
 tb_sdg <- tb_sdg %>%
   unite("target", starts_with("Which.target"), sep = "")
 
+#load list of prepared datasets (MICS,...)
+source("survey_sources.R")
+
 # Fill-in countries if global
 n_max_country <- nrow(geo_tags)
 
