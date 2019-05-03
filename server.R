@@ -11,6 +11,11 @@ server<-function(session, input,output){
     
     updateSelectInput(session, "target", "Target", choices = c("any",unique(x)))
   })
+
+  #reset inputs to default
+  observeEvent(input$reset, {
+    reset("form")
+  })
   
 mylongtable <- reactive({f_filter_long(min_year = input$timeline[1],
                                   max_year = input$timeline[2],
@@ -18,7 +23,8 @@ mylongtable <- reactive({f_filter_long(min_year = input$timeline[1],
                                   input$target,
                                   input$goal)})
   
-  output$dTable<-DT::renderDataTable({mytable()}, escape = FALSE, selection = "single", server = TRUE)
+  output$dTable<-DT::renderDataTable({mytable()}, escape = FALSE, selection = "single", server = TRUE,
+                                     options = list(pageLength = 25))
   
 
   #show selected rows in other table
