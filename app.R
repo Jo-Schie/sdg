@@ -463,18 +463,18 @@ download.file(url = "http://catalog.ihsn.org/index.php/catalog/export/csv?ps=200
 # Load the data
 ihsn <- read_csv("ihsn.csv")
 
-# strings/patterns in survey titles that are characteristics to survey type
-dhs_str <- "Demographic and Health Survey|D.mographique et de Sant.|Demograf.a y Salud|Demografia e Sa.de|National Family Health Survey"
-mics_str <- "Multiple Indicator|Indicadores M.ltipl|Indicateurs Multiples"
+# identifying the surveys by their ID rather than their title
+dhs_str <- "_DHS_|_MIS_|_AIS_"
+mics_str <- "_MICS_"
+popCensus <- "_PHC_"
+agCensus <- "_AgC_"
 
 # columns selecting surveys according to survey type
 ihsn_src <- ihsn %>%
   mutate(Source = "",
-         Source = ifelse(str_detect(title, dhs_str), "Demographic and Health Survey (DHS)", Source),
-         Source = ifelse(str_detect(title, mics_str), "Multiple Cluster Indicator Survey (MICS)", Source),
-         Source = ifelse(str_detect(title, "Census") & 
-                           !str_detect(title, "Agric|Econom|Livestock|Establ|School|Microfi|Insustr|Facilit"),
-                         "Population Census", Source)) %>% 
+         Source = ifelse(str_detect(idno, dhs_str), "DHS", Source),
+         Source = ifelse(str_detect(idno, mics_str), "MICS", Source),
+         Source = ifelse(str_detect(idno, popCensus), "Population Census", Source)) %>% 
   # TODO: add new classes matching the added patterns (Afrobarometer, LSMS...)
   #convert country names to the ones used in googlespreadsheet
   left_join(ihsn_countries, by = c("nation" = "ihsn_cnames")) %>%
