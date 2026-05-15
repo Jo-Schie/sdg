@@ -1,6 +1,6 @@
 # filter 
 f_filter <- function(min_year, max_year, my_country = "any", my_target="any") {
-  tb_sdg<-tb_sdg[tb_sdg2$Start<=max_year&
+  tb_sdg2<-tb_sdg2[tb_sdg2$Start<=max_year&
                      tb_sdg2$End>=min_year,]
   if (my_country !="any") {
     tb_sdg2 <- tb_sdg2[tb_sdg2$country==my_country,]

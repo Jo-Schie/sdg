@@ -24,7 +24,7 @@ ui <-fluidPage(
                         tabsetPanel(
                           # Data 
                           tabPanel(p(icon("table"), "shortform"),
-                                   h4('Datesets', align = "center"),
+                                   h4('Datasets', align = "center"),
                                    dataTableOutput(outputId = "dTable")
                           ), # end of "Dataset" tab panel
                           tabPanel(p(icon("table"), "longform"),
@@ -32,6 +32,13 @@ ui <-fluidPage(
                           ) # end of "Visualize the Data" tab panel
                         ))
                       ),
+             # Sources panel
+             tabPanel("Sources",
+                      h4('All Data Sources Included in This Database', align = "center"),
+                      p("This table lists all unique survey sources available in the SDG Locator database.",
+                        "Use it to identify which surveys are included and to spot any that may be missing."),
+                      dataTableOutput(outputId = "sourcesTable")
+             ),
              # about panel
              tabPanel("About",
                       h4('Number of Sets by Year', align = "center")
